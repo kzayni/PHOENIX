@@ -30,19 +30,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B064CCB630883456008D8673 /* PHOENIX */ = {
+		B064CCB630883456008D8673 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PHOENIX;
+			path = App;
 			sourceTree = "<group>";
 		};
 		B064CCC430883457008D8673 /* PHOENIXTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PHOENIXTests;
+			path = Tests/Unit;
 			sourceTree = "<group>";
 		};
 		B064CCCE30883457008D8673 /* PHOENIXUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PHOENIXUITests;
+			path = Tests/UI;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,7 +75,7 @@
 		B064CCAB30883456008D8673 = {
 			isa = PBXGroup;
 			children = (
-				B064CCB630883456008D8673 /* PHOENIX */,
+				B064CCB630883456008D8673 /* App */,
 				B064CCC430883457008D8673 /* PHOENIXTests */,
 				B064CCCE30883457008D8673 /* PHOENIXUITests */,
 				B064CCB530883456008D8673 /* Products */,
@@ -108,7 +108,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B064CCB630883456008D8673 /* PHOENIX */,
+				B064CCB630883456008D8673 /* App */,
 			);
 			name = PHOENIX;
 			packageProductDependencies = (
