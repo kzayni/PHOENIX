@@ -11,7 +11,8 @@ import SwiftUI
 struct PHOENIXApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LaunchExperienceView()
         }
+        .defaultLaunchBehavior(.presented)
     }
 }

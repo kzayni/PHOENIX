@@ -6,7 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C0A2000130883456008D8673 /* libPhoenixCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A2000230883456008D8673 /* libPhoenixCore.a */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		C0A2000730883456008D8673 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B064CCAC30883456008D8673 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0A2000430883456008D8673;
+			remoteInfo = PhoenixCore;
+		};
 		B064CCC230883457008D8673 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B064CCAC30883456008D8673 /* Project object */;
@@ -24,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C0A2000230883456008D8673 /* libPhoenixCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPhoenixCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B064CCB430883456008D8673 /* PHOENIX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PHOENIX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B064CCC130883457008D8673 /* PHOENIXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PHOENIXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B064CCCB30883457008D8673 /* PHOENIXUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PHOENIXUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,6 +57,11 @@
 			path = Tests/UI;
 			sourceTree = "<group>";
 		};
+		C0A2000330883456008D8673 /* PhoenixCore */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PhoenixCore;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0A2000130883456008D8673 /* libPhoenixCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +87,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0A2000630883456008D8673 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -76,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				B064CCB630883456008D8673 /* App */,
+				C0A2000330883456008D8673 /* PhoenixCore */,
 				B064CCC430883457008D8673 /* PHOENIXTests */,
 				B064CCCE30883457008D8673 /* PHOENIXUITests */,
 				B064CCB530883456008D8673 /* Products */,
@@ -86,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				B064CCB430883456008D8673 /* PHOENIX.app */,
+				C0A2000230883456008D8673 /* libPhoenixCore.a */,
 				B064CCC130883457008D8673 /* PHOENIXTests.xctest */,
 				B064CCCB30883457008D8673 /* PHOENIXUITests.xctest */,
 			);
@@ -106,6 +133,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C0A2000830883456008D8673 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B064CCB630883456008D8673 /* App */,
@@ -116,6 +144,27 @@
 			productName = PHOENIX;
 			productReference = B064CCB430883456008D8673 /* PHOENIX.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C0A2000430883456008D8673 /* PhoenixCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0A2000B30883456008D8673 /* Build configuration list for PBXNativeTarget "PhoenixCore" */;
+			buildPhases = (
+				C0A2000530883456008D8673 /* Sources */,
+				C0A2000630883456008D8673 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C0A2000330883456008D8673 /* PhoenixCore */,
+			);
+			name = PhoenixCore;
+			packageProductDependencies = (
+			);
+			productName = PhoenixCore;
+			productReference = C0A2000230883456008D8673 /* libPhoenixCore.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 		B064CCC030883457008D8673 /* PHOENIXTests */ = {
 			isa = PBXNativeTarget;
@@ -184,6 +233,9 @@
 						CreatedOnToolsVersion = 26.6;
 						TestTargetID = B064CCB330883456008D8673;
 					};
+					C0A2000430883456008D8673 = {
+						CreatedOnToolsVersion = 26.6;
+					};
 				};
 			};
 			buildConfigurationList = B064CCAF30883456008D8673 /* Build configuration list for PBXProject "PHOENIX" */;
@@ -201,6 +253,7 @@
 			projectRoot = "";
 			targets = (
 				B064CCB330883456008D8673 /* PHOENIX */,
+				C0A2000430883456008D8673 /* PhoenixCore */,
 				B064CCC030883457008D8673 /* PHOENIXTests */,
 				B064CCCA30883457008D8673 /* PHOENIXUITests */,
 			);
@@ -253,9 +306,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0A2000530883456008D8673 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C0A2000830883456008D8673 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0A2000430883456008D8673 /* PhoenixCore */;
+			targetProxy = C0A2000730883456008D8673 /* PBXContainerItemProxy */;
+		};
 		B064CCC330883457008D8673 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B064CCB330883456008D8673 /* PHOENIX */;
@@ -394,6 +459,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/PhoenixCore/include";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -409,6 +475,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = mkzayni.PHOENIX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -416,6 +483,7 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "App/Bridge/PHOENIX-Bridging-Header.h";
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -436,6 +504,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/PhoenixCore/include";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -451,6 +520,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = mkzayni.PHOENIX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -458,6 +528,7 @@
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "App/Bridge/PHOENIX-Bridging-Header.h";
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -474,6 +545,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/PhoenixCore/include";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
 				MACOSX_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
@@ -499,6 +571,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/PhoenixCore/include";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
 				MACOSX_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
@@ -565,6 +638,29 @@
 			};
 			name = Release;
 		};
+		C0A2000930883456008D8673 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/PhoenixCore/include";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C0A2000A30883456008D8673 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/PhoenixCore/include";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -600,6 +696,15 @@
 			buildConfigurations = (
 				B064CCDC30883457008D8673 /* Debug */,
 				B064CCDD30883457008D8673 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0A2000B30883456008D8673 /* Build configuration list for PBXNativeTarget "PhoenixCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0A2000930883456008D8673 /* Debug */,
+				C0A2000A30883456008D8673 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

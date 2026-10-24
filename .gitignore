@@ -14,6 +14,25 @@ xcuserdata/
 .swiftpm/
 Package.resolved
 
+# CMake out-of-source build products
+/build-cmake*/
+/cmake-build-*/
+/build-*/
+/CMakeFiles/
+/CMakeCache.txt
+/CTestTestfile.cmake
+/DartConfiguration.tcl
+/cmake_install.cmake
+/compile_commands.json
+/Testing/
+/CMakeUserPresets.json
+
+# Compiler, coverage, and test byproducts
+*.profraw
+*.profdata
+*.gcda
+*.gcno
+
 # macOS
 .DS_Store
 

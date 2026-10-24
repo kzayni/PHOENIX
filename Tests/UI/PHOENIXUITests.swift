@@ -24,13 +24,85 @@ final class PHOENIXUITests: XCTestCase {
 
     @MainActor
     func testExample() throws {
-        // UI tests must launch the application that they test.
         let app = XCUIApplication()
         app.launch()
+        ensureLaunchWindow(in: app)
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
+        let skipButton = app.buttons["skipLaunchButton"]
+        if skipButton.waitForExistence(timeout: 2) {
+            skipButton.click()
+        }
+        let newProjectButton = app.buttons["newProjectButton"]
+        XCTAssertTrue(newProjectButton.waitForExistence(timeout: 2))
+        newProjectButton.click()
+
+        let geometryPicker = app.descendants(matching: .any)["geometryTypePicker"]
+        let designationField = app.descendants(matching: .any)["nacaDesignationField"]
+
+        XCTAssertTrue(geometryPicker.waitForExistence(timeout: 5))
+        XCTAssertTrue(designationField.exists)
+        XCTAssertEqual(designationField.value as? String, "0012")
+        XCTAssertTrue(app.descendants(matching: .any)["nacaChordField"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["nacaPointCountField"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["nacaPointDistributionPicker"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["nacaSharpTrailingEdgeToggle"].exists)
+        let normalsToggle = app.descendants(matching: .any)["showSurfaceNormalsToggle"]
+        XCTAssertTrue(normalsToggle.exists)
+        XCTAssertTrue(app.descendants(matching: .any)["fitToViewButton"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["generateGeometryButton"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["geometryViewport"].exists)
+        attachScreenshot(of: app, named: "NACA 0012")
+
+        normalsToggle.click()
+        attachScreenshot(of: app, named: "NACA Surface Normals")
+
+        designationField.click()
+        designationField.typeKey("a", modifierFlags: .command)
+        designationField.typeText("2412")
+        XCTAssertEqual(designationField.value as? String, "2412")
+        XCTAssertFalse(app.descendants(matching: .any)["geometryErrorMessage"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["geometryViewport"].exists)
+        attachScreenshot(of: app, named: "NACA 2412")
+
+        geometryPicker.click()
+        app.menuItems["NACA Five-Digit"].click()
+
+        let fiveDigitField = app.descendants(matching: .any)["naca5DesignationField"]
+        XCTAssertTrue(fiveDigitField.waitForExistence(timeout: 2))
+        XCTAssertEqual(fiveDigitField.value as? String, "23012")
+        XCTAssertTrue(app.descendants(matching: .any)["naca5ChordField"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["naca5PointCountField"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["naca5PointDistributionPicker"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["naca5SharpTrailingEdgeToggle"].exists)
+        XCTAssertFalse(app.descendants(matching: .any)["geometryErrorMessage"].exists)
+        attachScreenshot(of: app, named: "NACA 23012")
+
+        geometryPicker.click()
+        app.menuItems["Circular Cylinder"].click()
+
+        XCTAssertTrue(app.descendants(matching: .any)["cylinderRadiusField"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.descendants(matching: .any)["cylinderCenterXField"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["cylinderCenterYField"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["cylinderPointCountField"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["cylinderStartingAngleField"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["geometryViewport"].exists)
+        attachScreenshot(of: app, named: "Circular Cylinder")
+    }
+
+    @MainActor
+    func testLaunchSequenceReachesInteractiveLandingScreen() throws {
+        let app = XCUIApplication()
+        app.launch()
+        ensureLaunchWindow(in: app)
+
+        XCTAssertTrue(app.descendants(matching: .any)["singularityView"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["phoenixTitle"].waitForExistence(timeout: 5))
+        attachScreenshot(of: app, named: "PHOENIX Title Reveal")
+        XCTAssertTrue(app.buttons["newProjectButton"].waitForExistence(timeout: 6))
+        XCTAssertTrue(app.buttons["newProjectButton"].isEnabled)
+        XCTAssertTrue(app.buttons["openProjectButton"].exists)
+        XCTAssertFalse(app.buttons["openProjectButton"].isEnabled)
+        attachScreenshot(of: app, named: "PHOENIX Landing")
     }
 
     @MainActor
@@ -38,6 +110,21 @@ final class PHOENIXUITests: XCTestCase {
         // This measures how long it takes to launch your application.
         measure(metrics: [XCTApplicationLaunchMetric()]) {
             XCUIApplication().launch()
+        }
+    }
+
+    private func attachScreenshot(of app: XCUIApplication, named name: String) {
+        let target = app.windows.firstMatch.exists ? app.windows.firstMatch : app
+        let attachment = XCTAttachment(screenshot: target.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    private func ensureLaunchWindow(in app: XCUIApplication) {
+        let singularity = app.descendants(matching: .any)["singularityView"]
+        if !singularity.waitForExistence(timeout: 2) {
+            app.typeKey("n", modifierFlags: .command)
         }
     }
 }
