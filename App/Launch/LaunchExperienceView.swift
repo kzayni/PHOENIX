@@ -1,3 +1,4 @@
+// Coordinates the nonblocking launch animation and workspace handoff.
 import SwiftUI
 
 /// Presents the launch sequence, then hands control to the existing workspace.
@@ -46,6 +47,8 @@ struct LaunchExperienceView: View {
         let controlsProgress = LaunchSequence.controlsProgress(at: elapsed)
 
         return ZStack {
+            // Presentation layers remain independent: the singularity can
+            // continue animating while title and controls resolve above it.
             SingularityView(elapsed: elapsed)
                 .accessibilityIdentifier("singularityView")
 
@@ -117,6 +120,8 @@ struct LaunchExperienceView: View {
     }
 
     private func updateClock(for phase: ScenePhase) {
+        // Accumulate only foreground time so returning to the app resumes the
+        // sequence instead of jumping ahead by the inactive duration.
         if phase == .active {
             if activeSince == nil {
                 activeSince = Date()
@@ -127,6 +132,8 @@ struct LaunchExperienceView: View {
         }
     }
 }
+
+// MARK: - Landing button styles
 
 private struct LaunchPrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

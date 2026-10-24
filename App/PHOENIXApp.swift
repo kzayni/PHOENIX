@@ -10,6 +10,8 @@ import SwiftUI
 @main
 struct PHOENIXApp: App {
     var body: some Scene {
+        // Launch presentation and computational workspace share one native
+        // window; the launch view performs the handoff after its timeline.
         WindowGroup {
             LaunchExperienceView()
         }

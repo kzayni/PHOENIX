@@ -1,3 +1,4 @@
+// AppKit event bridge for pointer-centered mouse-wheel zoom in SwiftUI.
 import AppKit
 import SwiftUI
 
@@ -44,6 +45,8 @@ final class ScrollWheelObservingView: NSView {
         }
 
         guard window != nil else { return }
+        // A local monitor observes only this application and returns the event
+        // unchanged so normal responder-chain behavior remains available.
         eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self] event in
             self?.handle(event)
             return event
@@ -55,6 +58,8 @@ final class ScrollWheelObservingView: NSView {
         let appKitLocation = convert(event.locationInWindow, from: nil)
         guard bounds.contains(appKitLocation) else { return }
 
+        // Trackpads report precise, high-frequency deltas; mouse wheels need a
+        // larger multiplier. Clamping prevents a single event from exploding.
         let sensitivity = event.hasPreciseScrollingDeltas ? 0.015 : 0.12
         let limitedDelta = min(max(event.scrollingDeltaY, -40), 40)
         let scaleFactor = exp(limitedDelta * sensitivity)

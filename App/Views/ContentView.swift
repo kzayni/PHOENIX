@@ -24,6 +24,8 @@ struct ContentView: View {
                 }
 
                 switch model.selection {
+                // Each family owns its parameter set while sharing display
+                // controls and one immutable geometry viewport.
                 case .nacaFourDigit:
                     nacaFourDigitControls
                 case .nacaFiveDigit:
@@ -99,6 +101,8 @@ struct ContentView: View {
             Toggle(
                 "Sharp trailing edge",
                 isOn: Binding(
+                    // UI terminology maps to the analytical coefficient
+                    // convention without exposing open/closed jargon.
                     get: { model.nacaTrailingEdge == .closed },
                     set: { isSharp in
                         model.nacaTrailingEdge = isSharp ? .closed : .open
@@ -140,6 +144,8 @@ struct ContentView: View {
             Toggle(
                 "Sharp trailing edge",
                 isOn: Binding(
+                    // Five-digit profiles use the same thickness-polynomial
+                    // trailing-edge convention as four-digit profiles.
                     get: { model.naca5TrailingEdge == .closed },
                     set: { isSharp in
                         model.naca5TrailingEdge = isSharp ? .closed : .open

@@ -1,3 +1,4 @@
+// Deterministic 2D Canvas artwork used only by the native launch experience.
 import SwiftUI
 
 /// A deterministic, interactive singularity scene rendered with SwiftUI Canvas.
@@ -37,6 +38,8 @@ struct SingularityView: View {
         let scale = min(size.width, size.height)
         let coreRadius = max(34, scale * 0.078)
 
+        // Paint from back to front so the opaque core cleanly masks disk
+        // particles without requiring clipping or a 3D depth buffer.
         context.fill(
             Path(CGRect(origin: .zero, size: size)),
             with: .radialGradient(
@@ -129,6 +132,8 @@ struct SingularityView: View {
         )
 
         for particle in SingularityScene.particles {
+            // All motion lies in the screen plane; height adds only subtle
+            // radial variation and never introduces perspective tilt.
             let angle = particle.angle + azimuth * particle.speed
             let radius = coreRadius * 1.22 + particle.radius * (maximumRadius - coreRadius * 1.22)
             let radialFalloff = 1 - particle.radius
@@ -235,6 +240,8 @@ private enum SingularityScene {
         let depth: Double
     }
 
+    // Fixed seeds make launch visuals reproducible across redraws and avoid
+    // allocating random scene data on every animation frame.
     static let particles: [Particle] = {
         var random = SeededRandomNumberGenerator(seed: 0x50484F454E4958)
         return (0..<720).map { _ in
@@ -271,6 +278,8 @@ private struct SeededRandomNumberGenerator: RandomNumberGenerator {
     }
 
     mutating func next() -> UInt64 {
+        // SplitMix64 provides a compact deterministic stream suitable for
+        // visual sampling; it is not used for scientific computation.
         state &+= 0x9E3779B97F4A7C15
         var value = state
         value = (value ^ (value >> 30)) &* 0xBF58476D1CE4E5B9

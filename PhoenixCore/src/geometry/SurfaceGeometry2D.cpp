@@ -37,6 +37,8 @@ SurfaceGeometry2D::SurfaceGeometry2D(
         throw std::invalid_argument("Surface coordinates must be finite numbers.");
     }
 
+    // Validate the seam segment only for periodic contours; open contours have
+    // no implicit last-to-first edge.
     const std::size_t checkedSegmentCount =
         connectivity == Connectivity::periodic ? points_.size() : points_.size() - 1;
     for (std::size_t index = 0; index < checkedSegmentCount; ++index) {
@@ -59,12 +61,15 @@ SurfaceGeometry2D::SurfaceGeometry2D(
         {maximumX->x, maximumY->y},
     };
 
+    // The signed shoelace area determines both degeneracy and orientation.
     double twiceArea = 0.0;
     for (std::size_t index = 0; index < points_.size(); ++index) {
         const Point2D next = points_[(index + 1) % points_.size()];
         twiceArea += points_[index].x * next.y - next.x * points_[index].y;
     }
     signedArea_ = 0.5 * twiceArea;
+    // Scale the degeneracy threshold by geometry size so the check remains
+    // meaningful when users change chord or radius.
     const double scale = std::max(
         bounds_.maximum.x - bounds_.minimum.x,
         bounds_.maximum.y - bounds_.minimum.y
@@ -89,6 +94,7 @@ Vector2D SurfaceGeometry2D::outwardUnitNormal(const std::size_t index) const {
     std::size_t previousIndex;
     std::size_t nextIndex;
     if (connectivity_ == Connectivity::periodic) {
+        // Centered tangents wrap naturally across a seam-unique contour.
         previousIndex = (index + points_.size() - 1) % points_.size();
         nextIndex = (index + 1) % points_.size();
     } else if (index == 0) {
@@ -111,6 +117,8 @@ Vector2D SurfaceGeometry2D::outwardUnitNormal(const std::size_t index) const {
         );
     }
 
+    // The exterior lies to the right of a counter-clockwise directed contour
+    // and to the left of a clockwise contour.
     if (orientation_ == Orientation::counterClockwise) {
         return {tangentY / magnitude, -tangentX / magnitude};
     }

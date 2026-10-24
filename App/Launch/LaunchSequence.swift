@@ -1,3 +1,4 @@
+// Pure launch timing functions kept separate from SwiftUI rendering.
 import Foundation
 
 /// Timing and eased progress values for the nonblocking launch presentation.
@@ -13,6 +14,7 @@ enum LaunchSequence {
     static let titleEnd = 6.0
     static let controlsEnd = 7.0
 
+    /// Returns the semantic stage used by tests and accessibility behavior.
     static func stage(at elapsed: TimeInterval) -> Stage {
         switch elapsed {
         case ..<titleStart:

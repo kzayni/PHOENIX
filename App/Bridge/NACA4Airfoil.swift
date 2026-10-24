@@ -1,5 +1,7 @@
+// Swift-facing parameters and ownership adapter for four-digit NACA geometry.
 import Foundation
 
+/// Immutable inputs retained with a rendered four-digit airfoil snapshot.
 nonisolated struct NACA4Metadata: Equatable, Sendable {
     let designation: String
     let chordLength: Double
@@ -8,6 +10,7 @@ nonisolated struct NACA4Metadata: Equatable, Sendable {
     let trailingEdge: TrailingEdgeConfiguration
 }
 
+/// Editable four-digit NACA inputs using UI-friendly Swift values.
 nonisolated struct NACA4Parameters: Equatable, Sendable {
     var designation = "0012"
     var chordLength = 1.0
@@ -22,6 +25,7 @@ nonisolated enum NACA4Airfoil {
         var handle: OpaquePointer?
         var errorBuffer = [CChar](repeating: 0, count: 512)
         let status = parameters.designation.withCString { designation in
+            // The designation pointer is borrowed by C++ only for this call.
             var cParameters = phoenix_naca4_parameters(
                 designation: designation,
                 chord_length: parameters.chordLength,
@@ -40,6 +44,8 @@ nonisolated enum NACA4Airfoil {
         guard status == PHOENIX_STATUS_OK, let handle else {
             throw phoenixError(status: status, buffer: errorBuffer)
         }
+        // SurfaceGeometry2D assumes ownership and pairs this handle with the
+        // PhoenixCore destructor when the Swift snapshot is released.
         let metadata = NACA4Metadata(
             designation: parameters.designation,
             chordLength: parameters.chordLength,

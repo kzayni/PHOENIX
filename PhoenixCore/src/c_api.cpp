@@ -61,6 +61,8 @@ phoenix_status generate(
     }
     *outGeometry = nullptr;
 
+    // Construct under RAII and release only after the output object is fully
+    // valid. Every exception is translated before crossing the C boundary.
     try {
         auto result = std::make_unique<phoenix_geometry>(generator());
         *outGeometry = result.release();
@@ -115,6 +117,7 @@ extern "C" phoenix_status phoenix_generate_naca4(
         return PHOENIX_STATUS_INVALID_ARGUMENT;
     }
 
+    // Convert POD enums explicitly so invalid C values never leak into C++.
     return generate(out_geometry, error_message, error_message_capacity, [&] {
         const phoenix::geometry::NACA4Parameters converted{
             parameters->designation,
@@ -164,6 +167,7 @@ extern "C" phoenix_status phoenix_generate_naca5(
         return PHOENIX_STATUS_INVALID_ARGUMENT;
     }
 
+    // The C and C++ parameter layouts are intentionally independent.
     return generate(out_geometry, error_message, error_message_capacity, [&] {
         const phoenix::geometry::NACA5Parameters converted{
             parameters->designation,
@@ -230,6 +234,8 @@ extern "C" phoenix_status phoenix_geometry_copy_points(
         || point_capacity < geometry->surface.points().size()) {
         return PHOENIX_STATUS_INVALID_ARGUMENT;
     }
+    // Copy rather than expose vector storage so callers cannot retain a pointer
+    // whose validity depends on a C++ object lifetime.
     const auto points = geometry->surface.points();
     for (std::size_t index = 0; index < points.size(); ++index) {
         out_points[index] = {points[index].x, points[index].y};

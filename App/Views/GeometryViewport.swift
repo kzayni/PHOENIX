@@ -1,3 +1,4 @@
+// Equal-scale SwiftUI rendering and camera interaction for immutable contours.
 import SwiftUI
 
 /// Renders an immutable PhoenixCore geometry snapshot with equal physical-axis
@@ -134,6 +135,7 @@ struct GeometryViewport: View {
         let bounds = geometry.bounds
         let geometryWidth = max(bounds.width, 1.0e-12)
         let geometryHeight = max(bounds.height, 1.0e-12)
+        // A single scale for both axes preserves the physical aspect ratio.
         let fitScale = min(
             availableWidth / geometryWidth,
             availableHeight / geometryHeight
@@ -146,6 +148,7 @@ struct GeometryViewport: View {
         )
 
         func screenPoint(_ point: Point2D) -> CGPoint {
+            // Canvas y grows downward, so physical y must be inverted.
             CGPoint(
                 x: size.width / 2.0 + effectivePan.width + (point.x - center.x) * scale,
                 y: size.height / 2.0 + effectivePan.height - (point.y - center.y) * scale
@@ -191,6 +194,8 @@ struct GeometryViewport: View {
         into context: inout GraphicsContext,
         screenPoint: (Point2D) -> CGPoint
     ) {
+        // Limit visual density while sourcing every displayed direction from
+        // PhoenixCore rather than reconstructing normals in the renderer.
         let sampleStep = max(geometry.points.count / 32, 1)
         let arrowLength = 28.0
         let arrowHeadLength = 6.0

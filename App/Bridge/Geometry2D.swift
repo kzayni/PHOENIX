@@ -1,5 +1,9 @@
+// Rendering-facing geometry values and lifetime management for C++ handles.
 import Foundation
 
+// MARK: - Lightweight value types
+
+/// Cartesian point copied from PhoenixCore for SwiftUI rendering.
 nonisolated struct Point2D: Equatable, Sendable {
     let x: Double
     let y: Double
@@ -12,11 +16,13 @@ nonisolated struct Point2D: Equatable, Sendable {
     }
 }
 
+/// Cartesian vector returned by PhoenixCore-derived operations.
 nonisolated struct Vector2D: Equatable, Sendable {
     let x: Double
     let y: Double
 }
 
+/// Axis-aligned physical bounds computed and validated by PhoenixCore.
 nonisolated struct GeometryBounds: Equatable, Sendable {
     let minimum: Point2D
     let maximum: Point2D
@@ -70,6 +76,8 @@ nonisolated enum GeometryError: Error, Equatable, LocalizedError {
     }
 }
 
+// MARK: - Owned geometry snapshot
+
 /// A rendering-facing Swift view of a contour owned and validated by PhoenixCore.
 ///
 /// The opaque C++ allocation remains alive for this object's lifetime. `points`
@@ -96,6 +104,8 @@ nonisolated final class SurfaceGeometry2D: @unchecked Sendable {
         var cOrientation = PHOENIX_ORIENTATION_COUNTER_CLOCKWISE
         var area = 0.0
 
+        // Read all scalar invariants before accepting ownership into a usable
+        // Swift object; any partial failure destroys the supplied handle.
         guard phoenix_geometry_get_point_count(handle, &pointCount) == PHOENIX_STATUS_OK,
               phoenix_geometry_get_bounds(handle, &cBounds) == PHOENIX_STATUS_OK,
               phoenix_geometry_get_connectivity(handle, &cConnectivity) == PHOENIX_STATUS_OK,
@@ -105,6 +115,8 @@ nonisolated final class SurfaceGeometry2D: @unchecked Sendable {
             throw GeometryError.core("PhoenixCore returned incomplete geometry data.")
         }
 
+        // SwiftUI consumes an immutable local snapshot. The retained handle is
+        // still used for computational queries such as outward normals.
         var copiedPoints = [phoenix_point2d](repeating: phoenix_point2d(), count: pointCount)
         let copyStatus = copiedPoints.withUnsafeMutableBufferPointer { buffer in
             phoenix_geometry_copy_points(handle, buffer.baseAddress, buffer.count)
@@ -145,6 +157,8 @@ nonisolated final class SurfaceGeometry2D: @unchecked Sendable {
             guard points.indices.contains(index) else { throw GeometryError.indexOutOfBounds(index) }
             return points[index]
         }
+        // Swift's remainder may be negative, so normalize twice for periodic
+        // indexing in both directions.
         let wrappedIndex = ((index % points.count) + points.count) % points.count
         return points[wrappedIndex]
     }
@@ -166,6 +180,7 @@ nonisolated final class SurfaceGeometry2D: @unchecked Sendable {
     }
 }
 
+/// Converts a C status/error buffer into the single Swift error surface used by the UI.
 nonisolated func phoenixError(status: phoenix_status, buffer: [CChar]) -> GeometryError {
     let message = buffer.withUnsafeBufferPointer { pointer in
         guard let address = pointer.baseAddress, address.pointee != 0 else {

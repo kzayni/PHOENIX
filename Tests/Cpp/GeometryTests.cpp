@@ -1,3 +1,6 @@
+/** @file GeometryTests.cpp
+ *  @brief Dependency-free regression checks for geometry math and the C ABI.
+ */
 #include "phoenix/c_api.h"
 #include "phoenix/geometry/CircularCylinder.hpp"
 #include "phoenix/geometry/NACA4Airfoil.hpp"
@@ -30,6 +33,8 @@ void requireApproximately(
 }
 
 void testNACA() {
+    // Combine analytical thickness checks with contour symmetry/orientation so
+    // regressions in either sampling or formula evaluation are visible.
     phoenix::geometry::NACA4Parameters parameters;
     parameters.designation = "0012";
     parameters.pointCount = 255;
@@ -62,6 +67,8 @@ void testNACA() {
 }
 
 void testNACA5() {
+    // Paired upper/lower samples recover the mean line because thickness is
+    // offset symmetrically along its local normal.
     phoenix::geometry::NACA5Parameters parameters;
     parameters.designation = "23012";
     parameters.pointCount = 256;
@@ -157,6 +164,8 @@ void testInvalidInputs() {
 }
 
 void testCAPIOwnershipAndErrors() {
+    // This test intentionally uses only the public C surface, including the
+    // required caller-buffer and destroy pairing used by Swift.
     char error[256]{};
     phoenix_geometry* geometry = nullptr;
     const phoenix_naca4_parameters parameters{

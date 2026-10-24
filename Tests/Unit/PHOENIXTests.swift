@@ -1,8 +1,12 @@
+// Swift regression coverage for launch timing, adapters, geometry invariants,
+// and the C ownership boundary used by the macOS application.
 import Foundation
 import Testing
 @testable import PHOENIX
 
 private let tightTolerance = 1.0e-12
+
+// MARK: - Launch timing
 
 struct LaunchSequenceTests {
     @Test func stagesFollowTheDocumentedTimeline() {
@@ -42,6 +46,8 @@ private func expectNoDegenerateSegments(_ geometry: SurfaceGeometry2D) {
         #expect(geometry.points[index].distanceSquared(to: geometry.points[nextIndex]) > 0)
     }
 }
+
+// MARK: - Four-digit NACA geometry
 
 struct NACA4AirfoilTests {
     @Test func defaultNACA0012IsSymmetricAndPeriodic() throws {
@@ -200,6 +206,8 @@ struct NACA4AirfoilTests {
     }
 }
 
+// MARK: - Five-digit NACA geometry
+
 struct NACA5AirfoilTests {
     @Test func normalMeanLineMatchesTabulatedNACA23012Definition() throws {
         let geometry = try NACA5Airfoil.generate(
@@ -277,6 +285,8 @@ struct NACA5AirfoilTests {
     }
 }
 
+// MARK: - Circular geometry
+
 struct CircularCylinderTests {
     @Test func radiusCenterCountAndBoundsAreCorrect() throws {
         let center = Point2D(x: 2.0, y: -1.0)
@@ -350,6 +360,8 @@ struct CircularCylinderTests {
         }
     }
 }
+
+// MARK: - C interoperability and ownership
 
 struct SurfaceGeometry2DTests {
     @Test func cAPIReturnsContiguousOwnedGeometry() throws {

@@ -24,11 +24,13 @@ typedef enum phoenix_status {
     PHOENIX_STATUS_INTERNAL_ERROR = 3
 } phoenix_status;
 
+/// Chordwise station distribution used by both NACA generators.
 typedef enum phoenix_point_distribution {
     PHOENIX_POINT_DISTRIBUTION_UNIFORM = 0,
     PHOENIX_POINT_DISTRIBUTION_COSINE = 1
 } phoenix_point_distribution;
 
+/// Thickness-polynomial convention at the NACA trailing edge.
 typedef enum phoenix_trailing_edge {
     PHOENIX_TRAILING_EDGE_OPEN = 0,
     PHOENIX_TRAILING_EDGE_CLOSED = 1
@@ -79,6 +81,7 @@ typedef struct phoenix_cylinder_parameters {
 
 typedef struct phoenix_geometry phoenix_geometry;
 
+/// @brief Generates a four-digit NACA contour.
 /// Creates geometry owned by the caller. On success `*out_geometry` must be
 /// released with `phoenix_geometry_destroy`. Input strings are borrowed only
 /// for the duration of the call. Error text is written to the caller-owned
@@ -90,6 +93,8 @@ phoenix_status phoenix_generate_naca4(
     size_t error_message_capacity
 );
 
+/// @brief Generates a five-digit NACA contour with the same ownership contract
+/// as `phoenix_generate_naca4`.
 phoenix_status phoenix_generate_naca5(
     const phoenix_naca5_parameters* parameters,
     phoenix_geometry** out_geometry,
@@ -97,6 +102,7 @@ phoenix_status phoenix_generate_naca5(
     size_t error_message_capacity
 );
 
+/// @brief Generates a circular-cylinder contour with caller-owned output.
 phoenix_status phoenix_generate_cylinder(
     const phoenix_cylinder_parameters* parameters,
     phoenix_geometry** out_geometry,
@@ -104,6 +110,7 @@ phoenix_status phoenix_generate_cylinder(
     size_t error_message_capacity
 );
 
+/// @brief Releases a geometry handle created by PhoenixCore; `NULL` is safe.
 void phoenix_geometry_destroy(phoenix_geometry* geometry);
 
 /// @brief Returns the exact number of points required by a coordinate buffer.
@@ -129,21 +136,25 @@ phoenix_status phoenix_geometry_get_bounds(
     phoenix_bounds2d* out_bounds
 );
 
+/// @brief Returns whether the final point connects back to the first.
 phoenix_status phoenix_geometry_get_connectivity(
     const phoenix_geometry* geometry,
     phoenix_connectivity* out_connectivity
 );
 
+/// @brief Returns orientation derived from signed enclosed area.
 phoenix_status phoenix_geometry_get_orientation(
     const phoenix_geometry* geometry,
     phoenix_orientation* out_orientation
 );
 
+/// @brief Returns signed shoelace area in physical coordinate units squared.
 phoenix_status phoenix_geometry_get_signed_area(
     const phoenix_geometry* geometry,
     double* out_signed_area
 );
 
+/// @brief Computes the orientation-aware outward unit normal at a surface point.
 phoenix_status phoenix_geometry_get_outward_unit_normal(
     const phoenix_geometry* geometry,
     size_t point_index,
@@ -152,6 +163,7 @@ phoenix_status phoenix_geometry_get_outward_unit_normal(
     size_t error_message_capacity
 );
 
+/// @brief Returns static human-readable text for a status code.
 const char* phoenix_status_description(phoenix_status status);
 
 #ifdef __cplusplus

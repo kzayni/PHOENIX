@@ -25,6 +25,7 @@ using phoenix::geometry::SurfaceGeometry2D;
 using phoenix::geometry::TrailingEdge;
 
 [[noreturn]] void usageError(const std::string& message) {
+    // Usage failures are distinguished from runtime/file failures in main.
     throw std::invalid_argument(message + "\nRun 'phoenix help' for usage.");
 }
 
@@ -61,6 +62,7 @@ void writeCSV(const SurfaceGeometry2D& geometry, const std::string& path) {
     if (!output) {
         throw std::runtime_error("Could not open output file: " + path);
     }
+    // Seventeen significant digits round-trip an IEEE-754 double through text.
     output << "x,y\n" << std::setprecision(17);
     for (const auto point : geometry.points()) {
         output << point.x << ',' << point.y << '\n';
@@ -119,6 +121,8 @@ int runNACA(const int count, char** values) {
     if (outputPath.empty()) {
         usageError("The --output option is required.");
     }
+    // Profile length is the only CLI dispatch distinction; both families keep
+    // identical options and call their PhoenixCore implementation directly.
     if (parameters.designation.size() == 4) {
         writeCSV(phoenix::geometry::generateNACA4(parameters), outputPath);
     } else if (parameters.designation.size() == 5) {

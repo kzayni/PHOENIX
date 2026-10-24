@@ -1,5 +1,7 @@
+// Swift-facing parameters and ownership adapter for PhoenixCore cylinders.
 import Foundation
 
+/// Immutable generation inputs retained with a rendered cylinder snapshot.
 nonisolated struct CircularCylinderMetadata: Equatable, Sendable {
     let radius: Double
     let center: Point2D
@@ -7,6 +9,7 @@ nonisolated struct CircularCylinderMetadata: Equatable, Sendable {
     let startingAngleDegrees: Double
 }
 
+/// Editable cylinder inputs expressed in Swift-native value types.
 nonisolated struct CircularCylinderParameters: Equatable, Sendable {
     var radius = 0.5
     var center = Point2D(x: 0.0, y: 0.0)
@@ -33,6 +36,8 @@ nonisolated enum CircularCylinder {
         guard status == PHOENIX_STATUS_OK, let handle else {
             throw phoenixError(status: status, buffer: errorBuffer)
         }
+        // Metadata is presentation context only; PhoenixCore remains the
+        // authoritative owner of the generated coordinates and invariants.
         let metadata = CircularCylinderMetadata(
             radius: parameters.radius,
             center: parameters.center,

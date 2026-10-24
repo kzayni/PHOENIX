@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(PHOENIX VERSION 0.1.0 LANGUAGES CXX)
 
+# Portable computational library shared by the CLI and native Xcode target.
 add_library(PhoenixCore STATIC
     PhoenixCore/src/c_api.cpp
     PhoenixCore/src/geometry/CircularCylinder.cpp
@@ -28,12 +29,14 @@ else()
     target_compile_options(PhoenixCore PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
+# Headless frontend; it intentionally links no Apple UI or rendering framework.
 add_executable(phoenix CLI/main.cpp)
 target_compile_features(phoenix PRIVATE cxx_std_20)
 target_link_libraries(phoenix PRIVATE PHOENIX::Core)
 
 include(CTest)
 if(BUILD_TESTING)
+    # Exercise both the C++/C interfaces and end-to-end CLI argument handling.
     add_executable(PhoenixCoreTests Tests/Cpp/GeometryTests.cpp)
     target_compile_features(PhoenixCoreTests PRIVATE cxx_std_20)
     target_link_libraries(PhoenixCoreTests PRIVATE PHOENIX::Core)

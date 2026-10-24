@@ -1,3 +1,6 @@
+/** @file CircularCylinder.cpp
+ *  @brief Validated, uniformly sampled circular-cylinder construction.
+ */
 #include "phoenix/geometry/CircularCylinder.hpp"
 
 #include <cmath>
@@ -24,6 +27,8 @@ SurfaceGeometry2D generateCircularCylinder(const CircularCylinderParameters& par
         throw std::invalid_argument("Surface-point count must be at least 3.");
     }
 
+    // Samples advance counter-clockwise in physical Cartesian coordinates and
+    // omit the repeated 2π endpoint so the periodic seam remains unique.
     const double startingAngle = parameters.startingAngleDegrees * std::numbers::pi / 180.0;
     std::vector<Point2D> points;
     points.reserve(parameters.pointCount);

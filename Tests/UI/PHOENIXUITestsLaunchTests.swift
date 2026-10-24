@@ -7,6 +7,7 @@
 
 import XCTest
 
+/// Captures a fresh launch state for each supported UI-test configuration.
 final class PHOENIXUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
@@ -22,11 +23,8 @@ final class PHOENIXUITestsLaunchTests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        // Insert steps here to perform after app launch but before taking a screenshot,
-        // such as logging into a test account or navigating somewhere in the app
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
-
+        // Keep this test navigation-free so the attachment represents the
+        // application's actual initial presentation.
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Launch Screen"
         attachment.lifetime = .keepAlways

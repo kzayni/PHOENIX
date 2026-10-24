@@ -7,20 +7,16 @@
 
 import XCTest
 
+/// End-to-end smoke coverage for launch handoff and editable geometry controls.
 final class PHOENIXUITests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
+        // Later assertions depend on earlier navigation, so stop at the first
+        // failure to preserve the useful root cause.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+    override func tearDownWithError() throws {}
 
     @MainActor
     func testExample() throws {
@@ -28,6 +24,8 @@ final class PHOENIXUITests: XCTestCase {
         app.launch()
         ensureLaunchWindow(in: app)
 
+        // Skip only when the control is available, allowing the workflow to
+        // tolerate either a fresh launch or a restored landing state.
         let skipButton = app.buttons["skipLaunchButton"]
         if skipButton.waitForExistence(timeout: 2) {
             skipButton.click()
@@ -53,6 +51,8 @@ final class PHOENIXUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["geometryViewport"].exists)
         attachScreenshot(of: app, named: "NACA 0012")
 
+        // Capture a visual artifact because normal direction is inherently a
+        // rendering concern beyond the analytical unit tests.
         normalsToggle.click()
         attachScreenshot(of: app, named: "NACA Surface Normals")
 
@@ -122,6 +122,7 @@ final class PHOENIXUITests: XCTestCase {
     }
 
     private func ensureLaunchWindow(in app: XCUIApplication) {
+        // macOS can restore an app process without reopening its WindowGroup.
         let singularity = app.descendants(matching: .any)["singularityView"]
         if !singularity.waitForExistence(timeout: 2) {
             app.typeKey("n", modifierFlags: .command)

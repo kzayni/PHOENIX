@@ -39,6 +39,8 @@ struct SurfacePair {
 };
 
 [[nodiscard]] MeanLine normalMeanLine(const int code) {
+    // The classical five-digit family is defined by tabulated m and k1 values;
+    // deriving m directly from the designation would change the mean line.
     switch (code) {
     case 10: return {0.0580, 361.4, 0.0, false};
     case 20: return {0.1260, 51.64, 0.0, false};
@@ -53,6 +55,8 @@ struct SurfacePair {
 }
 
 [[nodiscard]] MeanLine reflexMeanLine(const int code) {
+    // Reflex profiles add the tabulated k2/k1 ratio to enforce the intended
+    // aft-camber behavior and pitching-moment characteristics.
     switch (code) {
     case 21: return {0.1300, 51.990, 0.000764, true};
     case 31: return {0.2170, 15.793, 0.00677, true};
@@ -86,6 +90,8 @@ struct SurfacePair {
     }
 
     const bool reflex = meanLineCode % 10 == 1;
+    // Tables are normalized for the NACA 2xxxx design lift; scale k1 linearly
+    // for the designation's first digit.
     return {
         static_cast<double>(liftDigit) / 2.0,
         static_cast<double>(thicknessDigits) / 100.0,
@@ -101,6 +107,7 @@ struct SurfacePair {
     stations.reserve(count);
     for (std::size_t index = 0; index < count; ++index) {
         const double fraction = static_cast<double>(index) / static_cast<double>(count - 1);
+        // Cosine spacing clusters stations at both leading and trailing edges.
         stations.push_back(distribution == PointDistribution::uniform
             ? fraction
             : 0.5 * (1.0 - std::cos(std::numbers::pi * fraction)));
@@ -112,6 +119,8 @@ struct SurfacePair {
     const auto [m, tabulatedK1, k2OverK1, reflex] = digits.meanLine;
     const double k1 = digits.designLiftScale * tabulatedK1;
     if (!reflex) {
+        // Normal mean lines use a cubic forward branch and linear aft branch,
+        // joined continuously at the tabulated m station.
         if (x < m) {
             return {
                 (k1 / 6.0) * (x * x * x - 3.0 * m * x * x + m * m * (3.0 - m) * x),
@@ -124,6 +133,8 @@ struct SurfacePair {
         };
     }
 
+    // Reflex branches share constant terms that preserve endpoint and join
+    // conditions while changing the cubic coefficient aft of m.
     const double mCubed = m * m * m;
     const double aftCubed = (1.0 - m) * (1.0 - m) * (1.0 - m);
     if (x < m) {
@@ -169,6 +180,8 @@ struct SurfacePair {
     }
 
     const Camber camber = camberAt(x, digits);
+    // As in the four-digit construction, thickness is offset along the local
+    // mean-line normal rather than along the global y direction.
     const double angle = std::atan(camber.slope);
     const double chordwiseX = chord * x;
     const double camberY = chord * camber.ordinate;
@@ -192,6 +205,8 @@ SurfaceGeometry2D generateNACA5(const NACA5Parameters& parameters) {
         throw std::invalid_argument("Surface-point count must be at least 8.");
     }
 
+    // Preserve an exact final count while representing a sharp edge once and a
+    // blunt edge with distinct upper/lower seam points.
     const std::size_t upperStationCount = parameters.pointCount / 2 + 1;
     const std::size_t lowerStationCount = parameters.trailingEdge == TrailingEdge::closed
         ? parameters.pointCount - upperStationCount + 2
@@ -201,6 +216,7 @@ SurfaceGeometry2D generateNACA5(const NACA5Parameters& parameters) {
 
     std::vector<Point2D> points;
     points.reserve(parameters.pointCount);
+    // This traversal produces the project-wide counter-clockwise body order.
     for (auto station = upperStations.rbegin(); station != upperStations.rend(); ++station) {
         points.push_back(surfaceCoordinates(
             *station, digits, parameters.chordLength, parameters.trailingEdge

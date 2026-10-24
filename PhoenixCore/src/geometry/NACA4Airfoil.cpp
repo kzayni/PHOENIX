@@ -49,6 +49,8 @@ struct SurfacePair {
         );
     }
 
+    // Classical four-digit encoding: m is percent chord / 100, p is tenths
+    // chord, and the final pair is thickness percent / 100.
     return {
         static_cast<double>(maximumCamberDigit) / 100.0,
         static_cast<double>(camberPositionDigit) / 10.0,
@@ -64,6 +66,7 @@ struct SurfacePair {
     stations.reserve(count);
     for (std::size_t index = 0; index < count; ++index) {
         const double fraction = static_cast<double>(index) / static_cast<double>(count - 1);
+        // Cosine spacing clusters stations at both leading and trailing edges.
         stations.push_back(distribution == PointDistribution::uniform
             ? fraction
             : 0.5 * (1.0 - std::cos(std::numbers::pi * fraction)));
@@ -107,6 +110,8 @@ struct SurfacePair {
         camberSlope = 2.0 * scale * (digits.camberPosition - x);
     }
 
+    // Offset thickness along the camber-line normal, not vertically. This is
+    // required for the standard NACA surface-coordinate construction.
     const double angle = std::atan(camberSlope);
     const double chordwiseX = chord * x;
     const double camberY = chord * camber;
@@ -130,6 +135,8 @@ SurfaceGeometry2D generateNACA4(const NACA4Parameters& parameters) {
         throw std::invalid_argument("Surface-point count must be at least 8.");
     }
 
+    // Station counts are chosen so the assembled, seam-unique contour contains
+    // exactly pointCount entries for odd/even and sharp/blunt configurations.
     const std::size_t upperStationCount = parameters.pointCount / 2 + 1;
     const std::size_t lowerStationCount = parameters.trailingEdge == TrailingEdge::closed
         ? parameters.pointCount - upperStationCount + 2
@@ -139,6 +146,8 @@ SurfaceGeometry2D generateNACA4(const NACA4Parameters& parameters) {
 
     std::vector<Point2D> points;
     points.reserve(parameters.pointCount);
+    // Trailing-edge → leading-edge → trailing-edge ordering yields positive
+    // signed area and therefore counter-clockwise body orientation.
     for (auto station = upperStations.rbegin(); station != upperStations.rend(); ++station) {
         points.push_back(surfaceCoordinates(
             *station, digits, parameters.chordLength, parameters.trailingEdge

@@ -20,6 +20,7 @@ For a new session, read `AGENTS.md`, this file, `ARCHITECTURE.md`, and `DESIGN_D
 - A native Xcode `PhoenixCore` target linked as an explicit application dependency; no manual binary copy step is required.
 - CMake output directories and common generated root artifacts excluded by `.gitignore`.
 - Persistent code-documentation standards in `AGENTS.md`, with Doxygen C++ APIs and explicit interoperability ownership documentation.
+- Maintained Swift, C/C++, test, and build sources include focused comments for ownership, numerical formulas, coordinate conventions, rendering decisions, and non-obvious test intent; generated project metadata is intentionally not hand-annotated.
 
 ## Verification performed
 
@@ -36,6 +37,7 @@ Environment: Xcode 26.6, Apple Swift 6.3.3, Apple Clang 21.0.0, CMake 4.1.2, arm
 - Launch work: macOS Debug app build succeeded; all 16 Swift tests (including launch timing) and all 5 UI-test executions passed in the full scheme, including launch/landing and the existing geometry workflow.
 - After matching the supplied four-second GSAP title timeline, all 16 Swift tests and the focused launch/landing UI test passed; the full scheme was not rerun for this presentation-only refinement.
 - NACA five-digit increment: all 5 CTest entries passed in normal and AddressSanitizer builds, including core normal/reflex numerical checks and the five-digit CLI; all 19 Swift unit tests passed. The focused UI workflow was attempted twice, but XCTest timed out before launching the test while enabling macOS automation mode.
+- Commenting/documentation pass: the CMake core/CLI build and all 5 CTest entries passed; the macOS app built and all 19 Swift unit tests passed. Makefile targets were also dry-run parsed successfully.
 
 ## Not implemented
 

@@ -1,12 +1,16 @@
 PROJECT := PHOENIX.xcodeproj
 SCHEME := PHOENIX
 CONFIGURATION ?= Debug
+
+# Xcode and CMake keep separate output roots so either frontend can be built
+# independently without copying artifacts between build systems.
 BUILD_DIR := $(CURDIR)/build
 APP := $(BUILD_DIR)/Build/Products/$(CONFIGURATION)/PHOENIX.app
 CMAKE_BUILD_DIR ?= $(CURDIR)/build-cmake
 
 .PHONY: app run core cli cpp-test clean
 
+# Xcode builds the native PhoenixCore target as an application dependency.
 app:
 	xcodebuild \
 		-project "$(PROJECT)" \
@@ -21,6 +25,7 @@ app:
 run: app
 	open "$(APP)"
 
+# Configure on demand to keep this convenience target reproducible.
 core:
 	cmake -S . -B "$(CMAKE_BUILD_DIR)" -DCMAKE_BUILD_TYPE=$(CONFIGURATION) -DBUILD_TESTING=ON
 	cmake --build "$(CMAKE_BUILD_DIR)" --target PhoenixCore --parallel

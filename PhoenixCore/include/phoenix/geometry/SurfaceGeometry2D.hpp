@@ -56,7 +56,9 @@ public:
     [[nodiscard]] Orientation orientation() const noexcept { return orientation_; }
     [[nodiscard]] const Bounds2D& bounds() const noexcept { return bounds_; }
     [[nodiscard]] double signedArea() const noexcept { return signedArea_; }
+    /// @brief Number of explicit plus implicit connected contour segments.
     [[nodiscard]] std::size_t segmentCount() const noexcept;
+
     /// @brief Computes a centered-tangent outward unit normal.
     /// @param index Surface-point index. Open endpoints use one-sided tangents.
     /// @return Unit normal consistent with the contour orientation.

@@ -1,6 +1,8 @@
+// Main-actor state that translates editable controls into PhoenixCore calls.
 import Combine
 import Foundation
 
+/// Geometry families currently exposed by the native application.
 enum GeometrySelection: String, CaseIterable, Identifiable {
     case nacaFourDigit = "NACA Four-Digit"
     case nacaFiveDigit = "NACA Five-Digit"
@@ -45,6 +47,8 @@ final class GeometryViewModel: ObservableObject {
     }
 
     func regenerate() {
+        // Keep this switch as orchestration only. Mathematical generation and
+        // validation belong to the C++ adapters selected by each branch.
         do {
             switch selection {
             case .nacaFourDigit:
@@ -79,6 +83,8 @@ final class GeometryViewModel: ObservableObject {
             }
             errorMessage = nil
         } catch {
+            // Invalid edits clear stale geometry so the viewport never implies
+            // that rejected parameters produced the last valid contour.
             geometry = nil
             errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         }
